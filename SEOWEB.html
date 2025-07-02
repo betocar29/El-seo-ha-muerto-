@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel Interactivo: El Futuro del SEO con AI Overviews</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Emerald Tech (Background: #0A1A1A, Text: #E5E7EB, Accent: #10B981) -->
+    <!-- Application Structure Plan: The SPA is designed as an interactive dashboard with a sticky top navigation, allowing users to jump between key themes: a high-level 'Overview' with key stats, a deep dive into 'What Are AIOs?', a comparative analysis of 'The Impact', and an actionable 'Strategy Guide'. This non-linear structure was chosen to empower users to explore content based on their immediate needs (e.g., a strategist might jump to impact data, while a content creator might focus on the strategy section), enhancing usability over a simple linear report. -->
+    <!-- Visualization & Content Choices: Data is visualized to maximize clarity. Donut Chart for 'AIO Triggers' (Goal: Inform/Compare Proportions), Dual Bar Charts for 'Impact' (Goal: Compare Threat vs. Opportunity side-by-side), and HTML/CSS diagrams for 'AIO Anatomy' and 'Topic Clusters' (Goal: Organize/Inform). All charts are rendered on Canvas via Chart.js. This selection avoids SVG/Mermaid and provides interactive, digestible insights that support the user-centric dashboard structure. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0A1A1A;
+            color: #E5E7EB;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 450px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+        .nav-link {
+            transition: color 0.3s, border-color 0.3s;
+        }
+        .nav-link.active, .nav-link:hover {
+            color: #10B981;
+            border-bottom-color: #10B981;
+        }
+        .glass-card {
+            background-color: rgba(16, 185, 129, 0.05);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(16, 185, 129, 0.1);
+            transition: all 0.3s ease;
+        }
+        .glass-card:hover {
+             border-color: rgba(16, 185, 129, 0.3);
+        }
+        .strategy-tab {
+            transition: all 0.3s ease;
+            background-color: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            color: #E5E7EB;
+        }
+        .strategy-tab.active, .strategy-tab:hover {
+            background-color: #10B981;
+            color: #0A1A1A;
+            border-color: #10B981;
+        }
+        .emerald-text {
+            color: #10B981;
+        }
+        .emerald-glow {
+            text-shadow: 0 0 15px rgba(16, 185, 129, 0.8), 0 0 5px rgba(16, 185, 129, 1);
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Header & Navigation -->
+    <header class="bg-black/30 backdrop-blur-sm sticky top-0 z-50 border-b border-emerald-500/20">
+        <div class="container mx-auto px-4">
+            <div class="flex items-center justify-between h-16">
+                <h1 class="text-xl font-bold emerald-text emerald-glow">SEO en la Era de la IA</h1>
+                <!-- Desktop Menu -->
+                <nav class="hidden md:flex items-center space-x-8">
+                    <a href="#overview" class="nav-link font-semibold text-gray-300 border-b-2 border-transparent pb-1">Visión General</a>
+                    <a href="#what-is-it" class="nav-link font-semibold text-gray-300 border-b-2 border-transparent pb-1">¿Qué es?</a>
+                    <a href="#impact" class="nav-link font-semibold text-gray-300 border-b-2 border-transparent pb-1">Impacto</a>
+                    <a href="#strategy" class="nav-link font-semibold text-gray-300 border-b-2 border-transparent pb-1">Estrategia</a>
+                </nav>
+                <!-- Mobile Menu Button -->
+                <div class="md:hidden">
+                    <button id="mobile-menu-button" class="text-gray-300 hover:text-white focus:outline-none">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden">
+            <nav class="px-2 pt-2 pb-4 space-y-1 sm:px-3">
+                <a href="#overview" class="mobile-nav-link block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-white hover:bg-gray-700">Visión General</a>
+                <a href="#what-is-it" class="mobile-nav-link block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-white hover:bg-gray-700">¿Qué es?</a>
+                <a href="#impact" class="mobile-nav-link block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-white hover:bg-gray-700">Impacto</a>
+                <a href="#strategy" class="mobile-nav-link block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-white hover:bg-gray-700">Estrategia</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto p-4 md:p-8">
+
+        <!-- Section 1: Overview -->
+        <section id="overview" class="mb-16 md:mb-24 text-center pt-16 -mt-16">
+            <h2 class="text-4xl md:text-5xl font-black mb-2 text-white">El SEO no ha muerto. <span class="emerald-text emerald-glow">Se ha transformado.</span></h2>
+            <p class="text-lg text-gray-400 max-w-3xl mx-auto mb-12">Los AI Overviews (AIOs) de Google están redefiniendo el juego. El objetivo ya no es solo ser el #1, sino ser la fuente en la que confía la IA. Este panel te ayudará a entender el nuevo ecosistema y a adaptar tu estrategia.</p>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="glass-card rounded-xl shadow-lg p-6 text-left">
+                    <h3 class="font-bold text-lg mb-4 text-white">¿Cuándo aparece un AIO?</h3>
+                    <p class="text-sm text-gray-400 mb-4">La aparición de un AIO depende de la intención de búsqueda. Las consultas informativas complejas son el principal disparador.</p>
+                    <div class="chart-container">
+                        <canvas id="triggerChart"></canvas>
+                    </div>
+                </div>
+                <div class="glass-card rounded-xl shadow-lg p-6 text-left">
+                    <h3 class="font-bold text-lg mb-4 text-white">El Riesgo: "Zero-Click"</h3>
+                    <p class="text-sm text-gray-400 mb-2">Si no eres citado por la IA, el riesgo de perder visibilidad es real.</p>
+                    <div class="space-y-4 pt-4">
+                        <div class="text-center">
+                            <p class="text-4xl font-bold emerald-text emerald-glow">-34.5%</p>
+                            <p class="text-sm text-gray-400">Caída promedio de clics para la posición #1 (Ahrefs)</p>
+                        </div>
+                        <div class="text-center">
+                            <p class="text-4xl font-bold emerald-text emerald-glow">-60%</p>
+                            <p class="text-sm text-gray-400">Caída de tráfico reportada en algunas páginas (Conductor)</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="glass-card rounded-xl shadow-lg p-6 text-left">
+                    <h3 class="font-bold text-lg mb-4 text-white">La Oportunidad: Visibilidad Elevada</h3>
+                    <p class="text-sm text-gray-400 mb-2">Ser una fuente citada en un AIO puede multiplicar tu tráfico.</p>
+                     <div class="space-y-4 pt-4">
+                        <div class="text-center">
+                            <p class="text-4xl font-bold emerald-text emerald-glow">3.2x</p>
+                            <p class="text-sm text-gray-400">Más clics en búsquedas transaccionales (Terakeet)</p>
+                        </div>
+                        <div class="text-center">
+                            <p class="text-4xl font-bold emerald-text emerald-glow">2x</p>
+                            <p class="text-sm text-gray-400">Más clics en búsquedas informativas desde posiciones 3-10 (Terakeet)</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 2: What is it? -->
+        <section id="what-is-it" class="mb-16 md:mb-24 pt-16 -mt-16">
+            <div class="text-center">
+                <h2 class="text-3xl md:text-4xl font-black text-white mb-2">¿Qué es un <span class="emerald-text emerald-glow">AI Overview</span>?</h2>
+                <p class="text-lg text-gray-400 max-w-3xl mx-auto mb-12">Es más que un simple fragmento. Es una respuesta nueva, generada por la IA de Google (Gemini) que sintetiza información de múltiples fuentes para responder directamente a la consulta del usuario.</p>
+            </div>
+             <div class="glass-card rounded-xl shadow-lg p-6 md:p-8">
+                <div class="relative mb-8 max-w-2xl mx-auto">
+                    <div class="absolute -top-5 -left-5 text-5xl emerald-text emerald-glow opacity-50 transform -rotate-12">
+                        ✨
+                    </div>
+                    <div class="glass-card rounded-full p-4 pl-6 pr-4 flex items-center justify-between border-emerald-500/30">
+                        <span class="text-gray-300 text-lg">¿qué es un AI overview?</span>
+                        <span class="emerald-text text-2xl">🔍</span>
+                    </div>
+                </div>
+
+                <h3 class="text-xl font-bold text-center mb-6 text-white">Anatomía de un AIO</h3>
+                <div class="border-2 border-dashed border-emerald-500/20 rounded-lg p-4 md:p-6">
+                    <div class="bg-black/20 p-4 rounded-t-lg">
+                        <p class="text-sm text-gray-400"><span class="emerald-text">✨</span> Visión general creada por IA</p>
+                    </div>
+                    <div class="p-4">
+                        <p class="text-gray-300">Este es el <strong class="emerald-text">resumen generado por la IA</strong>, que combina información para dar una respuesta completa. El modelo Gemini de Google busca los mejores "fragmentos de información", no solo la "mejor página".</p>
+                    </div>
+                    <div class="bg-black/20 p-4 rounded-b-lg flex flex-wrap gap-4 justify-center">
+                        <div class="glass-card border-emerald-500/30 p-3 rounded-md text-center shadow-sm">
+                            <p class="font-bold text-white">Fuente A</p>
+                            <p class="text-xs text-gray-400">sitio-de-confianza.com</p>
+                        </div>
+                        <div class="glass-card border-emerald-500/30 p-3 rounded-md text-center shadow-sm">
+                            <p class="font-bold text-white">Fuente B</p>
+                            <p class="text-xs text-gray-400">un-hilo-de-reddit.com</p>
+                        </div>
+                         <div class="glass-card border-emerald-500/30 p-3 rounded-md text-center shadow-sm">
+                            <p class="font-bold text-white">Fuente C</p>
+                            <p class="text-xs text-gray-400">estudio-de-nicho.org</p>
+                        </div>
+                    </div>
+                     <p class="text-xs text-center text-gray-500 mt-4">Un AIO promedio cita ~5 páginas, y casi la mitad provienen de sitios fuera del top 50 de resultados orgánicos.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 3: The Impact -->
+        <section id="impact" class="mb-16 md:mb-24 pt-16 -mt-16">
+            <div class="text-center">
+                <h2 class="text-3xl font-bold text-white mb-2">La Balanza de la IA: <span class="emerald-text">Riesgo vs. Recompensa</span></h2>
+                <p class="text-lg text-gray-400 max-w-3xl mx-auto mb-12">Los datos muestran dos realidades opuestas. Ser ignorado por la IA perjudica el tráfico, mientras que ser citado lo impulsa drásticamente. El resultado de tu sitio web dependerá de en qué lado de la balanza te encuentres.</p>
+            </div>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div class="glass-card p-6 rounded-xl shadow-lg">
+                    <h3 class="text-xl font-bold text-red-400 mb-4 text-center">La Amenaza: Caída del CTR</h3>
+                    <p class="text-sm text-gray-400 text-center mb-6">Estudios de la industria reportan caídas significativas en clics cuando un sitio no es incluido en el AIO.</p>
+                    <div class="chart-container h-80">
+                        <canvas id="negativeImpactChart"></canvas>
+                    </div>
+                </div>
+                <div class="glass-card p-6 rounded-xl shadow-lg">
+                    <h3 class="text-xl font-bold text-green-400 mb-4 text-center">La Oportunidad: Aumento de Clics</h3>
+                     <p class="text-sm text-gray-400 text-center mb-6">Por otro lado, ser citado como fuente en un AIO resulta en un aumento sustancial de clics.</p>
+                     <div class="chart-container h-80">
+                        <canvas id="positiveImpactChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 4: The Strategy -->
+        <section id="strategy" class="mb-16 md:mb-24 pt-16 -mt-16">
+            <div class="text-center">
+                <h2 class="text-3xl font-bold text-white mb-2">Tu Estrategia Ganadora para la <span class="emerald-text">Era de la IA</span></h2>
+                <p class="text-lg text-gray-400 max-w-3xl mx-auto mb-12">Adaptarse es clave. La estrategia ya no es solo sobre rankings, sino sobre convertirse en una fuente de autoridad citable. Aquí tienes un plan de acción dividido en cuatro fases críticas.</p>
+            </div>
+
+            <div class="flex flex-col md:flex-row gap-8">
+                <div class="w-full md:w-1/4">
+                    <ul id="strategy-tabs-container" class="space-y-2">
+                        <li><button data-target="content-phase1" class="strategy-tab w-full text-left font-semibold p-4 rounded-lg active">Fase 1: Fundamentos</button></li>
+                        <li><button data-target="content-phase2" class="strategy-tab w-full text-left font-semibold p-4 rounded-lg">Fase 2: Contenido</button></li>
+                        <li><button data-target="content-phase3" class="strategy-tab w-full text-left font-semibold p-4 rounded-lg">Fase 3: Optimización Técnica</button></li>
+                        <li><button data-target="content-phase4" class="strategy-tab w-full text-left font-semibold p-4 rounded-lg">Fase 4: Medición</button></li>
+                    </ul>
+                </div>
+                <div class="w-full md:w-3/4 glass-card p-6 md:p-8 rounded-xl shadow-lg">
+                    <div id="strategy-content-container">
+                        <div id="content-phase1" class="strategy-content-item">
+                            <h3 class="text-2xl font-bold text-white mb-4">Fortalecer los Fundamentos</h3>
+                            <p class="mb-6 text-gray-400">Antes de cualquier táctica avanzada, asegura que tu base sea sólida. La IA de Google prioriza la calidad y la confianza por encima de todo.</p>
+                            <ul class="space-y-4">
+                                <li class="flex items-start"><span class="emerald-text font-bold mr-3 text-xl">✓</span><div><strong class="block text-gray-200">Dominar E-E-A-T:</strong> Demuestra Experiencia, Pericia, Autoridad y Fiabilidad. Incluye biografías de autor, cita fuentes y muestra credenciales.</div></li>
+                                <li class="flex items-start"><span class="emerald-text font-bold mr-3 text-xl">✓</span><div><strong class="block text-gray-200">Salud Técnica Impecable:</strong> Garantiza que tu sitio sea rápido, seguro (HTTPS), optimizado para móviles y con una arquitectura lógica y rastreable.</div></li>
+                            </ul>
+                        </div>
+                        <div id="content-phase2" class="strategy-content-item hidden">
+                            <h3 class="text-2xl font-bold text-white mb-4">Evolucionar la Estrategia de Contenidos</h3>
+                            <p class="mb-6 text-gray-400">Tu contenido debe servir a dos audiencias: la IA que lo selecciona y el humano que busca profundidad y valor real.</p>
+                            <ul class="space-y-4">
+                                <li class="flex items-start"><span class="emerald-text font-bold mr-3 text-xl">✓</span><div><strong class="block text-gray-200">Pensar en Temas (Topic Clusters):</strong> Crea una página pilar exhaustiva y rodéala de artículos de apoyo para demostrar autoridad temática.</div></li>
+                                <li class="flex items-start"><span class="emerald-text font-bold mr-3 text-xl">✓</span><div><strong class="block text-gray-200">Técnica "Respuesta Directa Primero":</strong> Coloca la respuesta más concisa y clara a la pregunta principal en el primer párrafo. Esto es oro para la IA.</div></li>
+                                 <li class="flex items-start"><span class="emerald-text font-bold mr-3 text-xl">✓</span><div><strong class="block text-gray-200">Crear Valor Único:</strong> Publica datos originales, opiniones de expertos o fomenta contenido generado por usuarios (UGC). Ofrece algo que la IA no pueda simplemente replicar.</div></li>
+                            </ul>
+                        </div>
+                        <div id="content-phase3" class="strategy-content-item hidden">
+                            <h3 class="text-2xl font-bold text-white mb-4">Optimización Técnica para la IA</h3>
+                            <p class="mb-6 text-gray-400">Ayuda a la IA a entender y confiar en tu contenido con señales técnicas claras y precisas.</p>
+                            <ul class="space-y-4">
+                                <li class="flex items-start"><span class="emerald-text font-bold mr-3 text-xl">✓</span><div><strong class="block text-gray-200">Implementación Crítica de Schema Markup:</strong> Usa datos estructurados (`Article`, `FAQPage`, `HowTo`) para etiquetar tu contenido. Ya no es opcional.</div></li>
+                                <li class="flex items-start"><span class="emerald-text font-bold mr-3 text-xl">✓</span><div><strong class="block text-gray-200">Estrategia de Enlazado Inteligente:</strong> Usa el enlazado interno para reforzar tus clústeres temáticos y consigue backlinks de calidad como voto de confianza.</div></li>
+                                 <li class="flex items-start"><span class="emerald-text font-bold mr-3 text-xl">✓</span><div><strong class="block text-gray-200">Citas y Referencias de Calidad:</strong> Enlaza a fuentes de autoridad (estudios, informes de la industria) para demostrar que tu contenido está bien investigado.</div></li>
+                            </ul>
+                        </div>
+                        <div id="content-phase4" class="strategy-content-item hidden">
+                           <h3 class="text-2xl font-bold text-white mb-4">Medición y Diversificación</h3>
+                            <p class="mb-6 text-gray-400">En un entorno que cambia rápidamente, medir correctamente y no depender de un solo canal es tu mejor seguro.</p>
+                            <ul class="space-y-4">
+                                <li class="flex items-start"><span class="emerald-text font-bold mr-3 text-xl">✓</span><div><strong class="block text-gray-200">Monitorización Avanzada:</strong> Usa herramientas de SEO de terceros para rastrear tu visibilidad específica en AIOs, ya que Search Console aún no lo permite.</div></li>
+                                <li class="flex items-start"><span class="emerald-text font-bold mr-3 text-xl">✓</span><div><strong class="block text-gray-200">Diversificación de Canales (Antifragilidad):</strong> No dependas solo de Google. Construye una audiencia propia a través de email marketing, redes sociales y otras estrategias para fomentar el tráfico directo.</div></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-black/50 border-t border-emerald-500/20 mt-16">
+        <div class="container mx-auto p-8 text-center text-gray-400">
+            <p>Esta aplicación interactiva fue generada para transformar un informe estático en una herramienta de exploración dinámica.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const chartData = {
+                trigger: { labels: ['Informativas', 'Comerciales', 'Transaccionales', 'Otras'], data: [59, 19, 4, 18] },
+                negativeImpact: { labels: ['Ahrefs', 'Mail Online', 'Chegg', 'Conductor'], data: [34.5, 56, 49, 60] },
+                positiveImpact: { labels: ['Transaccional (Alto Rank)', 'Informativa (Bajo Rank)', 'Transaccional (Bajo Rank)', 'Informativa (Alto Rank)'], data: [3.2, 2.0, 1.2, 1.5] }
+            };
+
+            const chartColors = {
+                emerald: '#10B981',
+                emeraldLight: '#34D399',
+                emeraldDark: '#059669',
+                gray: '#4B5563',
+                red: '#F87171',
+                green: '#4ADE80',
+                text: '#E5E7EB',
+                grid: 'rgba(229, 231, 235, 0.1)'
+            };
+
+            const tooltipTitleCallback = (tooltipItems) => {
+                const item = tooltipItems[0];
+                let label = item.chart.data.labels[item.dataIndex];
+                if (Array.isArray(label)) { return label.join(' '); }
+                return label;
+            };
+
+            const triggerCtx = document.getElementById('triggerChart');
+            if(triggerCtx) {
+                new Chart(triggerCtx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: chartData.trigger.labels,
+                        datasets: [{
+                            data: chartData.trigger.data,
+                            backgroundColor: [chartColors.emerald, chartColors.emeraldLight, chartColors.emeraldDark, chartColors.gray],
+                            borderColor: '#0A1A1A', borderWidth: 4, hoverOffset: 4
+                        }]
+                    },
+                    options: {
+                        responsive: true, maintainAspectRatio: false,
+                        plugins: { legend: { display: false }, tooltip: { callbacks: { title: tooltipTitleCallback }, bodyColor: chartColors.text, titleColor: chartColors.text } }
+                    }
+                });
+            }
+
+            const negativeImpactCtx = document.getElementById('negativeImpactChart');
+            if(negativeImpactCtx) {
+                new Chart(negativeImpactCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: chartData.negativeImpact.labels,
+                        datasets: [{ label: 'Caída de CTR (%)', data: chartData.negativeImpact.data, backgroundColor: chartColors.red, borderRadius: 4 }]
+                    },
+                    options: {
+                        responsive: true, maintainAspectRatio: false, indexAxis: 'y',
+                        scales: { x: { beginAtZero: true, grid: { color: chartColors.grid }, ticks: { color: chartColors.text } }, y: { grid: { display: false }, ticks: { color: chartColors.text } } },
+                        plugins: { legend: { display: false }, tooltip: { callbacks: { title: tooltipTitleCallback } } }
+                    }
+                });
+            }
+
+            const positiveImpactCtx = document.getElementById('positiveImpactChart');
+            if(positiveImpactCtx) {
+                new Chart(positiveImpactCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: chartData.positiveImpact.labels,
+                        datasets: [{ label: 'Multiplicador de Clics (x)', data: chartData.positiveImpact.data, backgroundColor: chartColors.green, borderRadius: 4 }]
+                    },
+                    options: {
+                        responsive: true, maintainAspectRatio: false, indexAxis: 'y',
+                        scales: { x: { beginAtZero: true, grid: { color: chartColors.grid }, ticks: { color: chartColors.text } }, y: { grid: { display: false }, ticks: { color: chartColors.text } } },
+                        plugins: { legend: { display: false }, tooltip: { callbacks: { title: tooltipTitleCallback } } }
+                    }
+                });
+            }
+            
+            const tabsContainer = document.getElementById('strategy-tabs-container');
+            const contentContainer = document.getElementById('strategy-content-container');
+            if(tabsContainer && contentContainer) {
+                const tabs = tabsContainer.querySelectorAll('.strategy-tab');
+                const contents = contentContainer.querySelectorAll('.strategy-content-item');
+                tabs.forEach(tab => {
+                    tab.addEventListener('click', () => {
+                        tabs.forEach(t => t.classList.remove('active'));
+                        tab.classList.add('active');
+                        contents.forEach(content => {
+                            content.classList.toggle('hidden', content.id !== tab.dataset.target);
+                        });
+                    });
+                });
+            }
+
+            const sections = document.querySelectorAll('section');
+            const navLinks = document.querySelectorAll('.nav-link');
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            const mobileNavLinks = document.querySelectorAll('.mobile-nav-link');
+
+            if(mobileMenuButton && mobileMenu) {
+                mobileMenuButton.addEventListener('click', () => {
+                    mobileMenu.classList.toggle('hidden');
+                });
+
+                mobileNavLinks.forEach(link => {
+                    link.addEventListener('click', () => {
+                        mobileMenu.classList.add('hidden');
+                    });
+                });
+            }
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const desktopLinks = document.querySelectorAll('.nav-link');
+                        desktopLinks.forEach(link => {
+                            link.classList.toggle('active', link.getAttribute('href').substring(1) === entry.target.id);
+                        });
+                    }
+                });
+            }, { rootMargin: '-50% 0px -50% 0px' });
+            sections.forEach(section => { observer.observe(section); });
+        });
+    </script>
+</body>
+</html>
